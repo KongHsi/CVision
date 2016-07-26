@@ -70,9 +70,11 @@ void sharpen(const Mat &image, Mat &result){
 			int nextG = image.at<Vec3b>(i+1,j)[1];
 			int nextR = image.at<Vec3b>(i+1,j)[2];
 
-			result.at<Vec3b>(i,j)[0] = 5*currentB-previousB-nextB-currentBP-currentBN;
-			result.at<Vec3b>(i,j)[1] = 5*currentG-previousG-nextG-currentGP-currentGN;
-			result.at<Vec3b>(i,j)[2] = 5*currentR-previousR-nextR-currentRP-currentRN;
+			//saturate_cast<uchar> is used to cut off all numbers that go over the range,
+			//	say any neg number become 0 and any number over 255 become 255.
+			result.at<Vec3b>(i,j)[0] = (saturate_cast<uchar>)(5*currentB-previousB-nextB-currentBP-currentBN);
+			result.at<Vec3b>(i,j)[1] = (saturate_cast<uchar>)(5*currentG-previousG-nextG-currentGP-currentGN);
+			result.at<Vec3b>(i,j)[2] = (saturate_cast<uchar>)(5*currentR-previousR-nextR-currentRP-currentRN);
 		}
 	}
 	result.row(0).setTo(Scalar(0));
