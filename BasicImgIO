@@ -34,7 +34,7 @@ int main (int argc,char** argv){
 	//show flipImg to the opened window 
 	imshow("image",flipImg);
 
-  imwrite("out.png",flipImg);
+  	imwrite("out.png",flipImg);
 	//wait until user press a key
 	waitKey(0);
 	
