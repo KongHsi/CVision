@@ -72,13 +72,15 @@ void sharpen(const Mat &image, Mat &result){
 
 			//saturate_cast<uchar> is used to cut off all numbers that go over the range,
 			//	say any neg number become 0 and any number over 255 become 255.
+			//	float numbers become closest int numbers.
 			result.at<Vec3b>(i,j)[0] = (saturate_cast<uchar>)(5*currentB-previousB-nextB-currentBP-currentBN);
 			result.at<Vec3b>(i,j)[1] = (saturate_cast<uchar>)(5*currentG-previousG-nextG-currentGP-currentGN);
 			result.at<Vec3b>(i,j)[2] = (saturate_cast<uchar>)(5*currentR-previousR-nextR-currentRP-currentRN);
 		}
 	}
-	result.row(0).setTo(Scalar(0));
-	result.row(result.rows-1).setTo(Scalar(0));
-	result.col(0).setTo(Scalar(0));
-	result.col(result.cols-1).setTo(Scalar(0));
+	//use Scalar(0,0,0) for 3-channels img
+	result.row(0).setTo(Scalar(0,0,0));
+	result.row(result.rows-1).setTo(Scalar(0,0,0));
+	result.col(0).setTo(Scalar(0,0,0));
+	result.col(result.cols-1).setTo(Scalar(0,0,0));
 }
