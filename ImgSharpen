@@ -11,6 +11,8 @@ using namespace cv;
 void salt(Mat &image,int n);
 void colorReduce(Mat &image,int div);
 void sharpen(const Mat &image, Mat &result);
+void sharpen2D(const Mat &image, Mat &result);
+
 int main (int argc,char** argv){
 
 	/*
@@ -83,4 +85,12 @@ void sharpen(const Mat &image, Mat &result){
 	result.row(result.rows-1).setTo(Scalar(0,0,0));
 	result.col(0).setTo(Scalar(0,0,0));
 	result.col(result.cols-1).setTo(Scalar(0,0,0));
+}
+void sharpen2D(const Mat &image,Mat &result){
+	//define the kernel matrix.
+	Mat kernel(3,3,CV_8S,Scalar(0));
+	kernel.at<uchar>(1,1)=5;
+	kernel.at<uchar>(0,1)=kernel.at<uchar>(2,1)=kernel.at<uchar>(1,2)=kernel.at<uchar>(1,0)=-1;
+	//filter the image with kernel then outputs result.
+	filter2D(image,result,image.depth(),kernel);
 }
