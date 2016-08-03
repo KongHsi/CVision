@@ -7,26 +7,26 @@
 using namespace std;
 using namespace cv;
 
-int findDis(Vec3b color, Vec3b target);
-void findColor(const Mat &image,Mat &result, Vec3b &target);
-void findEndPoints(const Mat &image, int* result);
+
+void findColor(const Mat &image,Mat &result, int target[]);
 void combineImgs(const Mat &image, Mat &result);
 void erodeImg(Mat &image);
 void dilateImg(Mat &image);
 void findRegionColor(Mat& result,int color,int regions[]);
 void findRegionColorMain();
+
 int main (int argc,char** argv){
 	 findRegionColorMain();
 	 system("pause");
 	return 0;
 }
  
-void findColor(const Mat &image,Mat &result, Vec3b &target){
+void findColor(const Mat &image,Mat &result, int target[]){
 	
 
 	for(int i=0;i<image.rows;i++){
 		for(int j=0;j<image.cols;j++){
-			if(findDis(image.at<Vec3b>(i,j), target)<250){
+			if(image.at<Vec3b>(i,j)[0]>=target[0] && image.at<Vec3b>(i,j)[0]<=target[1]){
 				result.at<uchar>(i,j)=0;
 				
 			}else{
@@ -34,9 +34,6 @@ void findColor(const Mat &image,Mat &result, Vec3b &target){
 			}
 		}
 	}
-}
-int findDis(Vec3b color, Vec3b target){
-	return abs(color[0]-target[0])+abs(color[1]-target[1])+abs(color[2]-target[2]);
 }
 void findEndPoints(const Mat &image, int* result){
 	int count=0, x=0, y=0;
@@ -73,22 +70,23 @@ void dilateImg(Mat &image){
 
 void findRegionColorMain(){
 		int regions[8] = {0};
-		for(int colorID = 1;colorID<=4;colorID++){
+		for(int colorID = 1;colorID<=3;colorID++){
 			Mat image = imread("1.jpg");
 			if(!image.data)system("pause");
+			
 			Mat result(image.rows,image.cols,CV_8UC1);
 			image.copyTo(result);
+			cvtColor(image,image,COLOR_BGR2HSV);
 			cvtColor(result,result, COLOR_BGR2GRAY);
-			Vec3b vec;
+			int vec[2];
 			switch(colorID){
-				case 1:vec=Vec3b(250,0,0);break;
-				case 2:vec=Vec3b(0,250,0);break;
-				case 3:vec=Vec3b(0,0,250);break;
-				case 4:vec=Vec3b(250,250,250);break;
+				case 1:vec[0] = 100;vec[1] = 129;break;
+				case 2:vec[0] = 26;vec[1] = 50;break;
+				case 3:vec[0] = 130;vec[1] = 160;break;
+				default:vec[0] = 100;vec[1] = 124;break;
 			}
 		findColor(image,result,vec);
-		dilateImg(result);dilateImg(result);
-		erodeImg(result);erodeImg(result);
+		
 		findRegionColor(result,colorID,regions);
 		waitKey(1);
 		}
@@ -101,19 +99,19 @@ void findRegionColor(Mat& result,int color,int regions[]){
 	for(int k=0;k<8;k++){
 		switch(k){
 			case 0: 
-				for(int i=0;i<result.rows/5;i++){
+				for(int i=0;i<result.rows/10;i++){
 					for(int j=0;j<result.cols/5;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
 					}}break;
 			case 1: 
-				for(int i=0;i<result.rows/5;i++){
+				for(int i=0;i<result.rows/10;i++){
 					for(int j=2*result.cols/5;j<3*result.cols/5;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
 					}}break;
 			case 2: 
-				for(int i=0;i<result.rows/5;i++){
+				for(int i=0;i<result.rows/10;i++){
 					for(int j=4*result.cols/5;j<result.cols;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
@@ -131,19 +129,19 @@ void findRegionColor(Mat& result,int color,int regions[]){
 							regions[k] = color;break;}
 					}}break;
 			case 5: 
-				for(int i=4*result.rows/5;i<result.rows;i++){
+				for(int i=result.rows-10;i<result.rows;i++){
 					for(int j=0;j<2*result.cols/5;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
 					}}break;
 			case 6: 
-				for(int i=4*result.rows/5;i<result.rows;i++){
+				for(int i=result.rows-10;i<result.rows;i++){
 					for(int j=2*result.cols/5;j<3*result.cols/5;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
 					}}break;
 			case 7: 
-				for(int i=4*result.rows/5;i<result.rows;i++){
+				for(int i=result.rows-10;i<result.rows;i++){
 					for(int j=4*result.cols/5;j<result.cols/5;j++){
 						if(result.at<uchar>(i,j)==0){
 							regions[k] = color;break;}
