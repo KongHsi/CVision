@@ -10,11 +10,10 @@ int main(void){
 	Mat color1 = imread("zi.png");
 	Mat color2 = imread("lv.png");
 
+	
 	//mark 0-2499 to label 1 and 2500-5000 to label -1
 	float labels[5000];
-	for(int c=0;c<2499;c++){
-		labels[c] = 1.0;
-	}
+	fill_n(labels,2500,1);
 	
 	for(int c=2500;c<5000;c++){
 		labels[c] = 2.0;
@@ -81,6 +80,7 @@ int main(void){
 	if(SVM.predict(sampleMat)!=1)
 		cout<<"false"<<endl;
 	}
+
 
 	system("pause");
 	return 0;
