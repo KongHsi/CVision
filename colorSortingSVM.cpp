@@ -11,9 +11,13 @@ int main(void){
 	Mat color2 = imread("lv.png");
 
 	//mark 0-2499 to label 1 and 2500-5000 to label -1
-	float labels[5000] = {1.0};
+	float labels[5000];
+	for(int c=0;c<2499;c++){
+		labels[c] = 1.0;
+	}
+	
 	for(int c=2500;c<5000;c++){
-		labels[c] = -1.0;
+		labels[c] = 2.0;
 	}
 	Mat LabelsMat(5000,1,CV_32FC1,labels);
 	
@@ -26,7 +30,7 @@ int main(void){
 			trainingdata[count][0] = (float)color1.at<Vec3b>(i,j)[0];
 			trainingdata[count][1] = (float)color1.at<Vec3b>(i,j)[1];
 			trainingdata[count][2] = (float)color1.at<Vec3b>(i,j)[2];
-			cout<<trainingdata[count][0]<<","<<trainingdata[count][1]<<","<<trainingdata[count][2]<<endl;
+			//cout<<trainingdata[count][0]<<","<<trainingdata[count][1]<<","<<trainingdata[count][2]<<endl;
 			count++;	
 		}}
 
@@ -36,7 +40,7 @@ int main(void){
 			trainingdata[count][0] =(float)color2.at<Vec3b>(i,j)[0];
 			trainingdata[count][1] =(float)color2.at<Vec3b>(i,j)[1];
 			trainingdata[count][2] =(float)color2.at<Vec3b>(i,j)[2];
-			cout<<trainingdata[count][0]<<","<<trainingdata[count][1]<<","<<trainingdata[count][2]<<endl;
+			//cout<<trainingdata[count][0]<<","<<trainingdata[count][1]<<","<<trainingdata[count][2]<<endl;
 			count++;		
 		}}
 	Mat trainingDataMat(5000,3,CV_32FC1,trainingdata);
@@ -51,10 +55,6 @@ int main(void){
 	CvSVM SVM;  
 	SVM.train(trainingDataMat, LabelsMat, Mat(), Mat(), params);  
 	
-	//here's a quick test case
-	Mat sampleMat = (Mat_<float>(1,3) << 70,43,65);
-    cout<<(float)SVM.predict(sampleMat);
-	system("pause");
 	
 	//set up the full testcase
 	Mat testcase = imread("zi.png");
@@ -67,18 +67,20 @@ int main(void){
 			testdata[count][0]=(float)testcase.at<Vec3b>(i,j)[0];
 			testdata[count][1]=(float)testcase.at<Vec3b>(i,j)[1];
 			testdata[count][2]=(float)testcase.at<Vec3b>(i,j)[2];
-			cout<<testdata[count][0]<<","<<testdata[count][1]<<","<<testdata[count][2]<<endl;
+			//cout<<testdata[count][0]<<","<<testdata[count][1]<<","<<testdata[count][2]<<endl;
 			count++;
 		}}
 	
 	
 	//test the testcase
+	bool flag = true;
 	for(int i=0;i<900;i++){
 	float temp[3] = {50,50,50};
 	Mat sampleMat(1,3,CV_32FC1,temp);
 	cout<< SVM.predict(sampleMat)<<endl;
+	if(SVM.predict(sampleMat)!=1)
+		cout<<"false"<<endl;
 	}
-
 
 	system("pause");
 	return 0;
