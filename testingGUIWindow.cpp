@@ -1,8 +1,12 @@
 #include <iostream>
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include <stdlib.h>
+#include <vector>
 using namespace std;
 using namespace cv;
+
+
 
 #include <Windows.h>
 #include <Commdlg.h>
@@ -10,22 +14,26 @@ using namespace cv;
 
 void operation(int,void*);
 
+
+
 //read new image
-Mat src;
+Mat img;
 //image name
 String imgName;
 //two variables adjustable on GUI
 int lightnesslvl =50;
 int button =0;
+int R =0;
+int G =0;
+int B =0;
 //a flag for new image
 bool stateFlag = true;
 
 int main(void){
+	
 
-
-  /// Load an image
- src = imread("1.jpg");
- if( !src.data ){ return -1; }
+ img = imread("1.jpg");
+ if( !img.data ){ return -1; }
 
  /// Create window
  namedWindow("window", 2 );
@@ -38,7 +46,16 @@ int main(void){
  createTrackbar( "Add Img", "window",
                  &button, 1,
                  operation);
- operation(0,0);
+ createTrackbar( "R", "window",
+                 &R, 255,
+                 operation);
+ createTrackbar( "G", "window",
+                 &G, 255,
+                 operation);
+ createTrackbar( "B", "window",
+                 &B, 255,
+                 operation);
+operation(0,0);
  waitKey(0);
  
 }
@@ -47,7 +64,7 @@ void operation(int,void*){
 	
 	//the normal state
 	if(button == 0){
-		Mat temp = 0.01*lightnesslvl*src;
+		Mat temp = 0.01*lightnesslvl*img;
 		imshow("window",temp);
 		stateFlag = true;
 	}
@@ -70,7 +87,7 @@ void operation(int,void*){
 		ofn.Flags = 0;
 		GetOpenFileNameA(&ofn);
 		imgName = ofn.lpstrFile;
-		Mat img = imread(imgName);
+		img = imread(imgName);
 		imshow("window",img);
 		stateFlag = false;
 	}
