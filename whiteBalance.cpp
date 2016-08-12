@@ -96,6 +96,7 @@ void findRegionColorMain(){
 		
 }
 
+//check colors for different regions of the image
 void findRegionColor(Mat& result,int color,int regions[]){
 	for(int k=0;k<8;k++){
 		int count=0;
