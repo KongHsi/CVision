@@ -13,7 +13,7 @@ using namespace cv;
 
 int main (int argc,char** argv){
 	 
-	Mat image = imread("1.jpg");
+	Mat image = imread("3.jpg");
 	if(!image.data)system("pause");
 
 	vector<int> b;
@@ -32,19 +32,19 @@ int main (int argc,char** argv){
 	sort(r.begin(),r.end());
 
 	int bStart,bEnd,gStart,gEnd,rStart,rEnd;
-	bStart = b.size()*0.05;
-	bEnd = b.size() - b.size()*0.02;
-	gStart = g.size()*0.05;
-	gEnd = g.size() - g.size()*0.02;
-	rStart = r.size()*0.05;
-	rEnd = r.size() - r.size()*0.02;
+	bStart = b[b.size()*0.02];
+	bEnd = b[b.size() - b.size()*0.02];
+	gStart = g[g.size()*0.02];
+	gEnd = g[g.size() - g.size()*0.02];
+	rStart = r[r.size()*0.02];
+	rEnd = r[r.size() - r.size()*0.02];
 
 
 	for(int i=0;i<image.rows;i++){
 		for(int j=0;j<image.cols;j++){
-			image.at<Vec3b>(i,j)[0] = (double)(image.at<Vec3b>(i,j)[0])*(i*j-bStart)/(bEnd-bStart)<0 ?0:(double)(image.at<Vec3b>(i,j)[0])*(i*j)/(bEnd-bStart);
-			image.at<Vec3b>(i,j)[1] = (double)(image.at<Vec3b>(i,j)[1])*(i*j-gStart)/(gEnd-gStart)<0 ?0:(double)(image.at<Vec3b>(i,j)[1])*(i*j)/(gEnd-gStart);
-			image.at<Vec3b>(i,j)[2] = (double)(image.at<Vec3b>(i,j)[2])*(i*j-rStart)/(rEnd-rStart)<0 ?0:(double)(image.at<Vec3b>(i,j)[2])*(i*j)/(rEnd-rStart);
+			image.at<Vec3b>(i,j)[0] = (double)(image.at<Vec3b>(i,j)[0]-bStart)/(bEnd-bStart)*255<0 ?image.at<Vec3b>(i,j)[0]:(double)(image.at<Vec3b>(i,j)[0]-bStart)/(bEnd-bStart)*255;
+			image.at<Vec3b>(i,j)[1] = (double)(image.at<Vec3b>(i,j)[1]-gStart)/(gEnd-gStart)*255<0 ?image.at<Vec3b>(i,j)[1]:(double)(image.at<Vec3b>(i,j)[1]-gStart)/(gEnd-gStart)*255;
+			image.at<Vec3b>(i,j)[2] = (double)(image.at<Vec3b>(i,j)[2]-bStart)/(rEnd-rStart)*255<0 ?image.at<Vec3b>(i,j)[2]:(double)(image.at<Vec3b>(i,j)[2]-rStart)/(rEnd-rStart)*255;
 		}
 	}
 
