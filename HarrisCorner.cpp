@@ -17,7 +17,6 @@ void CHfunction(int, void *);
 int main(void){
 
     img = imread("/home/richard/Desktop/toys/160.jpg");
-    imgGray = Mat :: zeros(img.size(),CV_32FC1);
     cvtColor(img,imgGray,CV_BGR2GRAY);
 
     namedWindow("window",2);
@@ -35,9 +34,10 @@ void CHfunction(int,void*){
     int blockSize = 2;
     int apertureSize = 3;
     double k = 0.04;
-    Mat result = Mat::zeros(img.size(),CV_32FC1);
 
-    cornerHarris(img,result, blockSize,apertureSize,k,BORDER_DEFAULT);
+    Mat result;
+
+    cornerHarris(imgGray,result, blockSize,apertureSize,k,BORDER_DEFAULT);
     Mat resultNorm;
     normalize(result,resultNorm,0,255,NORM_MINMAX,CV_32FC1,Mat());
     Mat resultScaled;
